@@ -18,6 +18,11 @@
     static bshad ballshad;
     static bool dragging;
 
+    static float tickrate = 1f/30;
+    static float tick = 0;
+
+    static bool upd;
+
     //camera
     static Vector2 cam;
     static float zoom = 1;

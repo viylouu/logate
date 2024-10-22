@@ -69,7 +69,7 @@
                     continue;
                 }
 
-                if(Keyboard.IsKeyPressed(Key.Space) && nodes[n].type == gate.val) {
+                if(Keyboard.IsKeyPressed(Key.Space) && (nodes[n].type == gate.val || nodes[n].type == gate.buf)) {
                     nodes[n].val = !nodes[n].val;
                     if(playcalcsfx) {
                         calcsfx.Play();
@@ -187,51 +187,45 @@
 
             //-------------------------- logic ------------------------------------
 
-            bool prevval = nodes[n].val;
+            if(upd) {
+                nodes[n].prevval = nodes[n].val;
 
-            switch(nodes[n].type) {
-                case gate.buf:
-                case gate.ret:
-                    if(nodes[n].ins[0] != null)
-                        nodes[n].val = nodes[n].ins[0].val;
-                    break;
-                case gate.not:
-                    if(nodes[n].ins[0] != null)
-                        nodes[n].val = !nodes[n].ins[0].val; 
-                    break;
-                case gate.and:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = nodes[n].ins[0].val && nodes[n].ins[1].val;
-                    break;
-                case gate.nand:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = !(nodes[n].ins[0].val && nodes[n].ins[1].val);
-                    break;
-                case gate.or:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = nodes[n].ins[0].val || nodes[n].ins[1].val;
-                    break;
-                case gate.nor:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = !(nodes[n].ins[0].val || nodes[n].ins[1].val);
-                    break;
-                case gate.xor:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = nodes[n].ins[0].val ^ nodes[n].ins[1].val;
-                    break;
-                case gate.xnor:
-                    if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)
-                        nodes[n].val = !(nodes[n].ins[0].val ^ nodes[n].ins[1].val);
-                    break;
-            }
+                switch(nodes[n].type) {
+                    case gate.buf:
+                    case gate.ret:
+                        if(nodes[n].ins[0] != null)
+                            nodes[n].val = nodes[n].ins[0].prevval; 
+                        break;
+                    case gate.not:
+                        nodes[n].val = !g(n,0); break;
+                    case gate.and:
+                        nodes[n].val = g(n,0) && g(n,1); break;
+                    case gate.nand:
+                        nodes[n].val = !(g(n,0) && g(n,1)); break;
+                    case gate.or:
+                        nodes[n].val = g(n,0) || g(n,1); break;
+                    case gate.nor:
+                        nodes[n].val = !(g(n,0) || g(n,1)); break;
+                    case gate.xor:
+                        nodes[n].val = g(n,0) ^ g(n,1); break;
+                    case gate.xnor:
+                        nodes[n].val = !(g(n,0) ^ g(n,1)); break;
+                }
 
-            if(playcalcsfx && nodes[n].val != prevval) {
-                calcsfx.Play();
-                playcalcsfx = false;
+                if(playcalcsfx && nodes[n].val != nodes[n].prevval) {
+                    calcsfx.Play();
+                    playcalcsfx = false;
+                }
             }
         }
 
         if(Mouse.IsButtonReleased(MouseButton.Left))
             wiring = false;
+    }
+
+    static bool g(int n, int i) {
+        if(nodes[n].ins[i] == null)
+            return false;
+        return nodes[n].ins[i].prevval;
     }
 }

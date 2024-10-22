@@ -4,6 +4,7 @@
     public node[] ins { get; set; }
     public node ret { get; set; }
     public bool val { get; set; }
+    public bool prevval { get; set; }
 
     //non save specific stuff
 

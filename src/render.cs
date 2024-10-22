@@ -6,6 +6,14 @@
 
         resetsoundbools();
 
+        upd = false;
+
+        if(tick <= 0) {
+            tick = tickrate;
+            upd = true;
+        } else
+            tick -= Time.DeltaTime;
+
         nodestuff(c);
 
         c.Stroke(new Color(47, 122, 118));
@@ -22,7 +30,7 @@
 
                 Vector2 inpos = ((nodes[n].Dpos-Dcam)*zoom1d)+new Vector2(-20,i*12-nodes[n].ins.Length/2*12+(nodes[n].ins.Length%2==0?6:0))*zoom1d+center;
 
-                c.DrawLine(inpos,(nodes[n].ins[i].pos-Dcam)*zoom1d+new Vector2(20,0)*zoom1d+center);
+                c.DrawLine(inpos,(nodes[n].ins[i].Dpos-Dcam)*zoom1d+new Vector2(20,0)*zoom1d+center);
             }
         }
 
@@ -105,6 +113,14 @@
         ImGui.SameLine();
         if(ImGui.Button("load"))
             nodes = load(Directory.GetCurrentDirectory() + @"\assets\saves\" + sfname + ".json");
+        ImGui.SameLine();
+        if(ImGui.Button("delete")) {
+            File.Delete(Directory.GetCurrentDirectory() + @"\assets\saves\" + sfname + ".json");
+            saves = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\assets\saves\", "*.json");
+            savenames = new string[saves.Length];
+            for(int i = 0; i < saves.Length; i++)
+                savenames[i] = Path.GetFileNameWithoutExtension(saves[i]);
+        }
 
         ImGui.End();
     }

@@ -2,7 +2,7 @@
 
 partial class main {
     static void save(string name, node[] n) {
-        snode[] snodes = new snode[n.Length];;
+        snode[] snodes = new snode[n.Length];
 
         for(int i = 0; i < n.Length; i++) {
             snode s = new();
@@ -29,27 +29,25 @@ partial class main {
     }
 
     static List<node> load(string path) {
-        snode[] s = JsonConvert.DeserializeObject<snode[]>(path);
+        snode[] s = JsonConvert.DeserializeObject<snode[]>(File.ReadAllText(path));
 
-        List<node> n = new List<node>();
+        node[] n = new node[s.Length];
 
         for(int i = 0; i < s.Length; i++) {
-            node _n = new();
-
-            _n.pos = s[i].pos;
-            _n.val = s[i].val;
-            _n.type = s[i].type;
-            _n.ins = new node[s[i].ins.Length];
-
-            n.Add(_n);
+            n[i] = new();
+            n[i].pos = s[i].pos;
+            n[i].val = s[i].val;
+            n[i].type = s[i].type;
+            n[i].ins = new node[s[i].ins.Length];
         }
 
         for(int i = 0; i < s.Length; i++) {
             n[i].ret = n[s[i].ret];
             for(int j = 0; j < n[i].ins.Length; j++)
-                n[i].ins[j] = n[s[i].ins[j]];
+                if(s[i].ins[j] != -1)
+                    n[i].ins[j] = n[s[i].ins[j]];
         }
 
-        return n;
+        return new List<node>(n);
     }
 }

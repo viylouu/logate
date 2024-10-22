@@ -10,6 +10,15 @@
         ballshad = new();
 
         cam = Vector2.Zero;
+
+        if(!Path.Exists(Directory.GetCurrentDirectory() + @"\assets\saves\"))
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\assets\saves\");
+
+        saves = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\assets\saves\", "*.json");
+        savenames = new string[saves.Length];
+
+        for(int i = 0; i < saves.Length; i++)
+            savenames[i] = Path.GetFileNameWithoutExtension(saves[i]);
     }
 
     static void loadaudio() {

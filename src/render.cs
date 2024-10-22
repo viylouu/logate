@@ -87,5 +87,25 @@
         ImGui.Text($"{nodes.Count()} node" + (nodes.Count()==1?"":"s"));
 
         ImGui.End();
+
+        ImGui.Begin("save/load");
+
+        if(ImGui.ListBox("saves", ref selfile, savenames, saves.Length))
+            sfname = savenames[selfile];
+
+        ImGui.InputText("name", ref sfname, 255);
+        ImGui.NewLine();
+        if(ImGui.Button("save")) {
+            save(sfname + ".json", nodes.ToArray()); 
+            saves = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\assets\saves\", "*.json");
+            savenames = new string[saves.Length];
+            for(int i = 0; i < saves.Length; i++)
+                savenames[i] = Path.GetFileNameWithoutExtension(saves[i]);
+        }
+        ImGui.SameLine();
+        if(ImGui.Button("load"))
+            nodes = load(Directory.GetCurrentDirectory() + @"\assets\saves\" + sfname + ".json");
+
+        ImGui.End();
     }
 }

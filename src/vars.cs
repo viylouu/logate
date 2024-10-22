@@ -31,5 +31,12 @@
     //wiring
     static bool wiring;
     static int nodew;
-    static byte nodeio; 
+    static byte nodeio;
+
+    //save and load
+    static int selfile;
+    static string sfname = "";
+
+    static string[] saves;
+    static string[] savenames;
 }

@@ -196,7 +196,8 @@
                         nodes[n].val = nodes[n].ins[0].val;
                     break;
                 case gate.not:
-                    nodes[n].val = !nodes[n].ins[0].val; 
+                    if(nodes[n].ins[0] != null)
+                        nodes[n].val = !nodes[n].ins[0].val; 
                     break;
                 case gate.and:
                     if(nodes[n].ins[0] != null && nodes[n].ins[1] != null)

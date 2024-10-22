@@ -33,16 +33,18 @@ partial class main {
 
         node[] n = new node[s.Length];
 
-        for(int i = 0; i < s.Length; i++) {
+        for(int i = 0; i < n.Length; i++) {
             n[i] = new();
             n[i].pos = s[i].pos;
             n[i].val = s[i].val;
             n[i].type = s[i].type;
             n[i].ins = new node[s[i].ins.Length];
+            n[i].selinrad = new float[s[i].ins.Length];
         }
-
-        for(int i = 0; i < s.Length; i++) {
-            n[i].ret = n[s[i].ret];
+        
+        for(int i = 0; i < n.Length; i++) {
+            if(s[i].ret != -1)
+                n[i].ret = n[s[i].ret];
             for(int j = 0; j < n[i].ins.Length; j++)
                 if(s[i].ins[j] != -1)
                     n[i].ins[j] = n[s[i].ins[j]];
